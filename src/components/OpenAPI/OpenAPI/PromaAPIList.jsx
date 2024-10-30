@@ -52,7 +52,7 @@ function PromaAPIList() {
         <div className={styles.container}>
             <B1>PROMA API 목록 관리</B1>
             <B5>프롬프트 이름을 클릭하면 프롬프트 상세 조회가 가능합니다!</B5>
-            {openapiList !== 0 ? (
+            {openapiList.length !== 0 ? (
                 <table>
                     <colgroup>
                         <col style={{ width: "30%" }} />
