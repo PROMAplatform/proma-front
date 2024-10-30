@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
-import { H5, H6, B4 } from "../../../styles/font-styles";
+import { H5, B4 } from "../../../styles/font-styles";
 import {
     categoryColorsState,
     availableCategoriesState,
@@ -78,7 +78,7 @@ const CreateBlockModal = ({ isOpen, onClose }) => {
             </div>
             <div className={styles.formGroup}>
                 <label htmlFor="blockTitle">
-                    <H6>{t(`promptMaking.blockTitle`)}</H6>
+                    <H5>{t(`promptMaking.blockTitle`)}</H5>
                 </label>
                 <input
                     id="blockTitle"
