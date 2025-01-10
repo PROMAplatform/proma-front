@@ -8,6 +8,7 @@ import BlockSection from "./components/BlockSection";
 import { useSetRecoilState } from "recoil";
 import { userHistoryState } from "../../../recoil/prompt/promptRecoilState";
 
+
 const PromptMakingSidebar = () => {
     const setUserHistory = useSetRecoilState(userHistoryState);
 
