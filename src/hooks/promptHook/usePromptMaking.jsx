@@ -1,11 +1,12 @@
-import {useRecoilState, useRecoilValue} from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { enqueueSnackbar } from "notistack";
 import {
     activeBlocksState,
     combinationsState,
     blockDetailsState,
-    activeCategoryState, activeAiBlocksState,
-    userHistoryState
+    activeCategoryState,
+    activeAiBlocksState,
+    userHistoryState,
 } from "../../recoil/prompt/promptRecoilState";
 import { useEffect } from "react";
 import { t } from "i18next";
@@ -14,7 +15,8 @@ import { usePromptHook } from "../../api/prompt/prompt";
 export const usePromptMaking = () => {
     const [combinations, setCombinations] = useRecoilState(combinationsState);
     const [activeBlocks, setActiveBlocks] = useRecoilState(activeBlocksState);
-    const [activeAiBlocks, setActiveAiBlocks] = useRecoilState(activeAiBlocksState);
+    const [activeAiBlocks, setActiveAiBlocks] =
+        useRecoilState(activeAiBlocksState);
     const [userHistory, setUserHistoryState] = useRecoilState(userHistoryState);
     const blockDetails = useRecoilValue(blockDetailsState);
     const activeCategory = useRecoilValue(activeCategoryState);
@@ -100,7 +102,8 @@ export const usePromptMaking = () => {
                 isBlockDefault,
             );
         } else if (
-            (source.droppableId === "sidebar" || source.droppableId === "sidebar_ai") &&
+            (source.droppableId === "sidebar" ||
+                source.droppableId === "sidebar_ai") &&
             destination.droppableId !== "sidebar" &&
             destination.droppableId !== "sidebar_ai"
         ) {
@@ -113,9 +116,14 @@ export const usePromptMaking = () => {
         } else if (
             source.droppableId !== "sidebar" &&
             source.droppableId !== "sidebar_ai" &&
-            (destination.droppableId === "sidebar" || destination.droppableId === "sidebar_ai")
+            (destination.droppableId === "sidebar" ||
+                destination.droppableId === "sidebar_ai")
         ) {
-            handleCombinationAreaToSidebar(source.droppableId, numericBlockId, destination.droppableId);
+            handleCombinationAreaToSidebar(
+                source.droppableId,
+                numericBlockId,
+                destination.droppableId,
+            );
         } else if (
             source.droppableId !== "sidebar" &&
             source.droppableId !== "sidebar_ai" &&
@@ -177,13 +185,17 @@ export const usePromptMaking = () => {
         }));
 
         setUserHistoryState((prev) => {
-            const prevEntries = typeof prev === 'string' ? prev.split('\n') : [];
+            const prevEntries =
+                typeof prev === "string" ? prev.split("\n") : [];
             const nextNumber = prevEntries.length + 1;
-            const description = blockDetails[blockId]?.blockDescription || 'Description not found';
+            const description =
+                blockDetails[blockId]?.blockDescription ||
+                "Description not found";
             const newEntry = `${nextNumber}. ${category}에서 ${description}을 선택했습니다`;
-            return prevEntries.length > 0 ? `${prevEntries.join('\n')}\n${newEntry}` : newEntry;
+            return prevEntries.length > 0
+                ? `${prevEntries.join("\n")}\n${newEntry}`
+                : newEntry;
         });
-
 
         if (sourceDroppableId === "sidebar") {
             setActiveBlocks((prev) => ({
@@ -215,7 +227,11 @@ export const usePromptMaking = () => {
     //     }));
     // };
 
-    const handleCombinationAreaToSidebar = (category, blockId, destinationDroppableId) => {
+    const handleCombinationAreaToSidebar = (
+        category,
+        blockId,
+        destinationDroppableId,
+    ) => {
         setCombinations((prev) => ({
             ...prev,
             [category]: null,

@@ -32,7 +32,7 @@ function SideBar() {
                 <div className={styles.listContainer}>
                     <ChattingList />
                     <div onClick={handleAddChattingRoom}>
-                        <AddButton text={t(`sideBar.addNewChatting`)}/>
+                        <AddButton text={t(`sideBar.addNewChatting`)} />
                     </div>
                 </div>
             ) : (

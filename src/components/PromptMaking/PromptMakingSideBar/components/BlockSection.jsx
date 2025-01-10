@@ -1,18 +1,21 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from "react";
 import styles from "./BlockSection.module.css";
-import {B5} from "../../../../styles/font-styles";
-import {Draggable, Droppable} from "react-beautiful-dnd";
+import { B5 } from "../../../../styles/font-styles";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import PromptValueBlock from "../../../common/Prompt/PromptValueBlock";
-import {t} from "i18next";
+import { t } from "i18next";
 import CreateBlockModal from "../CreateBlockModal";
-import {useRecoilState, useRecoilValue} from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
-    activeBlocksState, activeCategoryState, availableCategoriesState, blockDetailsState,
+    activeBlocksState,
+    activeCategoryState,
+    availableCategoriesState,
+    blockDetailsState,
     categoryBlockShapesState,
     categoryColorsState,
 } from "../../../../recoil/prompt/promptRecoilState";
-import {getLocalPromptMethod} from "../../../../util/localStorage";
-import {usePromptHook} from "../../../../api/prompt/prompt";
+import { getLocalPromptMethod } from "../../../../util/localStorage";
+import { usePromptHook } from "../../../../api/prompt/prompt";
 
 function BlockSection() {
     const categoryColors = useRecoilValue(categoryColorsState);
@@ -21,7 +24,8 @@ function BlockSection() {
     const localPromptMethod = getLocalPromptMethod();
     const { fetchBlocks } = usePromptHook();
 
-    const [activeCategory, setActiveCategory] = useRecoilState(activeCategoryState);
+    const [activeCategory, setActiveCategory] =
+        useRecoilState(activeCategoryState);
     const activeBlocks = useRecoilValue(activeBlocksState);
     const categories = useRecoilValue(availableCategoriesState);
     const blockDetails = useRecoilValue(blockDetailsState);
@@ -85,25 +89,25 @@ function BlockSection() {
                                                     >
                                                         <PromptValueBlock
                                                             color={
-                                                            categoryColors[
-                                                                activeCategory
+                                                                categoryColors[
+                                                                    activeCategory
                                                                 ]
-                                                        }
+                                                            }
                                                             value={
-                                                            block.blockValue
-                                                        }
+                                                                block.blockValue
+                                                            }
                                                             variant={
-                                                            categoryBlockShapes[
-                                                                activeCategory
+                                                                categoryBlockShapes[
+                                                                    activeCategory
                                                                 ]
-                                                        }
+                                                            }
                                                             size="medium"
                                                         />
                                                     </div>
                                                 )}
                                             </Draggable>
                                         );
-                                        },
+                                    },
                                 )}
                                 {provided.placeholder}
                             </div>
