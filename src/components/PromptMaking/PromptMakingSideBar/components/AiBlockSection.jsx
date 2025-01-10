@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import styles from "./AiBlockSection.module.css";
 import {B4, B5} from "../../../../styles/font-styles";
 import {Draggable, Droppable} from "react-beautiful-dnd";
@@ -6,7 +6,7 @@ import PromptValueBlock from "../../../common/Prompt/PromptValueBlock";
 import {t} from "i18next";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {
-    activeAiBlocksState, activeBlocksState, activeCategoryState, availableCategoriesState, blockDetailsState,
+    activeAiBlocksState, activeCategoryState, availableCategoriesState, blockDetailsState,
     categoryBlockShapesState,
     categoryColorsState, fetchAiBlocksState,
 } from "../../../../recoil/prompt/promptRecoilState";
@@ -22,7 +22,6 @@ function AiBlockSection() {
     const localPromptCategory = getLocalPromptCategory();
     const { fetchAiBlocks } = usePromptHook();
     const [isLoading,setFetchAiBlocksState] = useRecoilState(fetchAiBlocksState);
-    const activeBlocksData = useRecoilValue(activeBlocksState);
     const [activeCategory, setActiveCategory] = useRecoilState(activeCategoryState);
     const activeBlocks = useRecoilValue(activeAiBlocksState);
     const categories = useRecoilValue(availableCategoriesState);
