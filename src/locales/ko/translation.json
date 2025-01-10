@@ -63,7 +63,8 @@
         "userPromptError3": "🚀 카테고리 간 이동은 불가능합니다!",
         "userPromptError4": "에서 다음 카테고리로 이동 불가능합니다 :",
         "blockDeleteFailed": "⚠️ 디폴트 블록은 삭제가 불가능합니다.",
-        "blockDeleted": "블록 삭제가 완료되었습니다!"
+        "blockDeleted": "블록 삭제가 완료되었습니다!",
+        "aiRecommend" : "Ai가 블록을 추천중입니다!"
     },
     "introduce": {
         "introduceOne": "모두를 위한 프롬프트 엔지니어링",

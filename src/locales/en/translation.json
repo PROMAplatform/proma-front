@@ -64,7 +64,8 @@
         "userPromptError3": "🚀 The migration between category is impossible! You can't move to ",
         "userPromptError4": "to",
         "blockDeleteFailed": "⚠️ Default Block can't be deleted",
-        "blockDeleted": "Block is completely deleted! "
+        "blockDeleted": "Block is completely deleted! ",
+        "aiRecommend" : "Ai is recommending blocks!"
     },
     "introduce": {
         "introduceOne": "Prompt Engineering for Everyone",

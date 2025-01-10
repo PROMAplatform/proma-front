@@ -125,6 +125,16 @@ export const activeBlocksState = atom({
     ),
 });
 
+export const activeAiBlocksState = atom({
+    key: "activeAiBlocksState",
+    default: Object.fromEntries(
+        Object.keys(initialBlocks).map((category) => [
+            category,
+            initialBlocks[category].map((block) => block.blockId),
+        ]),
+    ),
+});
+
 // 선택된 조합
 export const combinationsState = atom({
     key: "combinationsState",
@@ -219,6 +229,18 @@ export const promptEvaluationErrorState = atom({
     key: "promptEvaluationErrorState",
     default: null,
 });
+
+export const fetchAiBlocksState = atom({
+    key: "fetchAiBlocksState",
+    default: null,
+});
+
+export const userHistoryState = atom({
+    key: "userHistoryState",
+    default: "",
+});
+
+
 // // 각종 상태 초기화 함수
 // export const useResetCategoriesOnTypeChange = () => {
 //   return useRecoilCallback(({ snapshot, set }) => async () => {

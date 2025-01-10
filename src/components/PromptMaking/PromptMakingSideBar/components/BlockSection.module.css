@@ -1,0 +1,79 @@
+.sidebar {
+    display: flex;
+    width: 100%;
+    height: auto;
+    background-color: var(--white);
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.categories {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 25px 0;
+    background-color: var(--white);
+}
+
+.category {
+    padding: 15px 10px;
+    padding-right: 10px;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    cursor: pointer;
+    text-orientation: upright;
+    word-break: break-word; /* 긴 단어를 줄바꿈 */
+    transition: all 0.3s;
+    font-size: 14px;
+    background-color: var(--category-color);
+    white-space: nowrap;
+    z-index: 10;
+}
+
+.category.active {
+    margin-right: -15px;
+    padding-right: 25px;
+    padding-left: 25px;
+}
+
+.blocksContainer {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+    background-color: #fff;
+}
+
+.blocks {
+    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.block {
+    cursor: move;
+    opacity: 0.9;
+    transition: opacity 0.3s;
+}
+
+.block:hover {
+    opacity: 1;
+}
+
+.addButton {
+    width: auto;
+    padding: 8px 30px;
+    background-color: var(--white);
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    margin: 10px;
+    align-self: center;
+}
+
+.addButton:hover {
+    opacity: 0.9;
+}
