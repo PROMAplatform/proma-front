@@ -5,7 +5,7 @@ import logo from "../../../assets/logos/promaLogoSmall.svg";
 import { Link } from "react-router-dom";
 import AiBlockSection from "./components/AiBlockSection";
 import BlockSection from "./components/BlockSection";
-import {useRecoilState, useSetRecoilState} from "recoil";
+import {useSetRecoilState} from "recoil";
 import {userHistoryState} from "../../../recoil/prompt/promptRecoilState";
 
 const PromptMakingSidebar = () => {
@@ -13,7 +13,8 @@ const PromptMakingSidebar = () => {
 
     //userhistory 초기화
     useEffect(() => {
-        setUserHistory({});
+        setUserHistory("");
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
