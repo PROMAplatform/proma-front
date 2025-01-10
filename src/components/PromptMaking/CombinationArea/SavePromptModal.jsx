@@ -6,7 +6,8 @@ import ModalButton from "../../common/ModalButton";
 import {
     promptMethodState,
     promptListState,
-    blockDetailsState, userHistoryState,
+    blockDetailsState,
+    userHistoryState,
 } from "../../../recoil/prompt/promptRecoilState";
 import { useRecoilValue } from "recoil";
 import RefinedPromptText from "../FinalPromptArea/RefinedPromptText";
@@ -14,7 +15,7 @@ import { usePromptHook } from "../../../api/prompt/prompt";
 import { useChattingRoomHooks } from "../../../api/chatting/chatting";
 import ModalContainer from "../../common/ModalContainer";
 import { t } from "i18next";
-import {getLocalPromptCategory} from "../../../util/localStorage";
+import { getLocalPromptCategory } from "../../../util/localStorage";
 
 const allCategories = ["IT", "게임", "글쓰기", "건강", "교육", "예술", "기타"];
 
@@ -51,6 +52,7 @@ const SavePromptModal = ({
             setPromptDescription("");
             setPromptCategory(localPromptCategory);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [prompt]);
 
     if (!isOpen) return null;
@@ -67,11 +69,7 @@ const SavePromptModal = ({
             const promptPreview = Object.values(refinedPromptParts).join(" ");
             console.log("listPromptAtom:", listPromptAtom);
             console.log("promptPreview", promptPreview);
-            patchPromptBlock(
-                promptId,
-                listPromptAtom,
-                promptPreview,
-            );
+            patchPromptBlock(promptId, listPromptAtom, promptPreview);
             patchPromptInfo(
                 promptId,
                 promptTitle,
@@ -93,16 +91,12 @@ const SavePromptModal = ({
                 listPromptAtom,
             );
 
-            userHistory(
-                userHistoryValue,
-                promptMethod,
-                promptCategory
-            );
+            userHistory(userHistoryValue, promptMethod, promptCategory);
 
             console.log({
                 userHistoryValue,
                 promptMethod,
-                promptCategory
+                promptCategory,
             });
 
             console.log({
@@ -135,9 +129,9 @@ const SavePromptModal = ({
             onSubmit={handleSave}
             children
         >
-             <div className={styles.formGroup}>
-                 <H5>{t(`promptMaking.promptPreView`)}</H5>
-                 <div className={styles.promptPreview}>
+            <div className={styles.formGroup}>
+                <H5>{t(`promptMaking.promptPreView`)}</H5>
+                <div className={styles.promptPreview}>
                     <RefinedPromptText />
                 </div>
             </div>

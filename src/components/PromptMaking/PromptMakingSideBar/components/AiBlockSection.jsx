@@ -1,17 +1,24 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from "react";
 import styles from "./AiBlockSection.module.css";
-import {B4, B5} from "../../../../styles/font-styles";
-import {Draggable, Droppable} from "react-beautiful-dnd";
+import { B4, B5 } from "../../../../styles/font-styles";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import PromptValueBlock from "../../../common/Prompt/PromptValueBlock";
-import {t} from "i18next";
-import {useRecoilState, useRecoilValue} from "recoil";
+import { t } from "i18next";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
-    activeAiBlocksState, activeCategoryState, availableCategoriesState, blockDetailsState,
+    activeAiBlocksState,
+    activeCategoryState,
+    availableCategoriesState,
+    blockDetailsState,
     categoryBlockShapesState,
-    categoryColorsState, fetchAiBlocksState,
+    categoryColorsState,
+    fetchAiBlocksState,
 } from "../../../../recoil/prompt/promptRecoilState";
-import {getLocalPromptCategory, getLocalPromptMethod} from "../../../../util/localStorage";
-import {usePromptHook} from "../../../../api/prompt/prompt";
+import {
+    getLocalPromptCategory,
+    getLocalPromptMethod,
+} from "../../../../util/localStorage";
+import { usePromptHook } from "../../../../api/prompt/prompt";
 import promaAnimation from "../../../../assets/animation/promaAnimation.json";
 import Lottie from "react-lottie";
 
@@ -21,8 +28,10 @@ function AiBlockSection() {
     const localPromptMethod = getLocalPromptMethod();
     const localPromptCategory = getLocalPromptCategory();
     const { fetchAiBlocks } = usePromptHook();
-    const [isLoading,setFetchAiBlocksState] = useRecoilState(fetchAiBlocksState);
-    const [activeCategory, setActiveCategory] = useRecoilState(activeCategoryState);
+    const [isLoading, setFetchAiBlocksState] =
+        useRecoilState(fetchAiBlocksState);
+    const [activeCategory, setActiveCategory] =
+        useRecoilState(activeCategoryState);
     const activeBlocks = useRecoilValue(activeAiBlocksState);
     const categories = useRecoilValue(availableCategoriesState);
     const blockDetails = useRecoilValue(blockDetailsState);
@@ -65,65 +74,69 @@ function AiBlockSection() {
                         </div>
                     ))}
                 </div>
-                {(isLoading) ? <div
-                    className={`${styles.blocksContainer} ${styles.tourTarget}`}
-                    style={{ "--active-color": getActiveColor() }}
-                >
-                    <Droppable droppableId="sidebar_ai">
-                        {(provided) => (
-                            <div
-                                {...provided.droppableProps}
-                                ref={provided.innerRef}
-                                className={styles.blocks}
-                                data-tour="blocks"
-                            >
-                                {activeBlocks[activeCategory]?.map(
-                                    (blockId, index) => {
-                                        const block = blockDetails[blockId];
-                                        return (
-                                            <Draggable
-                                                key={blockId}
-                                                draggableId={`${blockId}|${activeCategory}`}
-                                                index={index}
-                                            >
-                                                {(provided) => (
-                                                    <div
-                                                        ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
-                                                        className={styles.block}
-                                                    >
-                                                        <PromptValueBlock
-                                                            color={
-                                                                categoryColors[
-                                                                    activeCategory
+                {isLoading ? (
+                    <div
+                        className={`${styles.blocksContainer} ${styles.tourTarget}`}
+                        style={{ "--active-color": getActiveColor() }}
+                    >
+                        <Droppable droppableId="sidebar_ai">
+                            {(provided) => (
+                                <div
+                                    {...provided.droppableProps}
+                                    ref={provided.innerRef}
+                                    className={styles.blocks}
+                                    data-tour="blocks"
+                                >
+                                    {activeBlocks[activeCategory]?.map(
+                                        (blockId, index) => {
+                                            const block = blockDetails[blockId];
+                                            return (
+                                                <Draggable
+                                                    key={blockId}
+                                                    draggableId={`${blockId}|${activeCategory}`}
+                                                    index={index}
+                                                >
+                                                    {(provided) => (
+                                                        <div
+                                                            ref={
+                                                                provided.innerRef
+                                                            }
+                                                            {...provided.draggableProps}
+                                                            {...provided.dragHandleProps}
+                                                            className={
+                                                                styles.block
+                                                            }
+                                                        >
+                                                            <PromptValueBlock
+                                                                color={
+                                                                    categoryColors[
+                                                                        activeCategory
                                                                     ]
-                                                            }
-                                                            value={
-                                                                block.blockValue
-                                                            }
-                                                            variant={
-                                                                categoryBlockShapes[
-                                                                    activeCategory
+                                                                }
+                                                                value={
+                                                                    block.blockValue
+                                                                }
+                                                                variant={
+                                                                    categoryBlockShapes[
+                                                                        activeCategory
                                                                     ]
-                                                            }
-                                                            size="medium"
-                                                        />
-                                                    </div>
-                                                )}
-                                            </Draggable>
-                                        );
-                                    },
-                                )}
-                                {provided.placeholder}
-                            </div>
-                        )}
-                    </Droppable>
-                </div> :
+                                                                }
+                                                                size="medium"
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </Draggable>
+                                            );
+                                        },
+                                    )}
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                    </div>
+                ) : (
                     <div className={styles.loadingSection}>
-                        <B4>
-                            {t(`promptMaking.aiRecommend`)}
-                        </B4>
+                        <B4>{t(`promptMaking.aiRecommend`)}</B4>
                         <Lottie
                             options={defaultOptions}
                             width={200}
@@ -131,7 +144,7 @@ function AiBlockSection() {
                             animationData={promaAnimation}
                         />
                     </div>
-                }
+                )}
             </div>
         </div>
     );

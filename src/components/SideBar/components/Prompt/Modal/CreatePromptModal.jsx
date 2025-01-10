@@ -7,19 +7,29 @@ import characterIcon from "../../../../../assets/images/characterIcon.svg";
 import taskIcon from "../../../../../assets/images/taskIcon.svg";
 import freeIcon from "../../../../../assets/images/freeIcon.svg";
 import { useNavigate } from "react-router-dom";
-import {useRecoilState} from "recoil";
+import { useRecoilState } from "recoil";
 import { promptMethodState } from "../../../../../recoil/prompt/promptRecoilState";
-import {setLocalPromptCategory, setLocalPromptMethod} from "../../../../../util/localStorage";
-import {B5, H5} from "../../../../../styles/font-styles";
+import {
+    setLocalPromptCategory,
+    setLocalPromptMethod,
+} from "../../../../../util/localStorage";
+import { B5, H5 } from "../../../../../styles/font-styles";
 import { t } from "i18next";
 
 function CreatePromptModal({ isOpen, onClose }) {
     const navigate = useNavigate();
     const [promptMethod, setPromptMethod] = useRecoilState(promptMethodState);
 
-    const allCategories = ["IT", "게임", "글쓰기", "건강", "교육", "예술", "기타"];
+    const allCategories = [
+        "IT",
+        "게임",
+        "글쓰기",
+        "건강",
+        "교육",
+        "예술",
+        "기타",
+    ];
     const [promptCategory, setPromptCategory] = useState("IT");
-
 
     if (!isOpen) return null;
 

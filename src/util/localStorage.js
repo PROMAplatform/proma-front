@@ -9,23 +9,23 @@ export const getLocalPromptMethod = () => {
 
 export const getTourFinished = () => {
     const tourFinished = localStorage.getItem("tourFinished");
-    if (tourFinished === 'false') {
+    if (tourFinished === "false") {
         return false;
     } else {
         return true;
     }
-}
+};
 
 export const setTourFinish = (tourFinished) => {
     localStorage.setItem("tourFinished", tourFinished.toString());
-}
+};
 
 export const getIsFirstVisited = () => {
-    const hasVisited = localStorage.getItem('hasVisited');
-    if (hasVisited === 'false') {
+    const hasVisited = localStorage.getItem("hasVisited");
+    if (hasVisited === "false") {
         return false;
     } else {
-        localStorage.setItem("hasVisited", 'true');
+        localStorage.setItem("hasVisited", "true");
         return true;
     }
 };

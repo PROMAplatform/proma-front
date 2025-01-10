@@ -11,7 +11,8 @@ import {
     categoryBlockShapesState,
     activeCategoryState,
     promptEvaluationState,
-    promptEvaluationErrorState, fetchAiBlocksState,
+    promptEvaluationErrorState,
+    fetchAiBlocksState,
 } from "../../recoil/prompt/promptRecoilState";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
@@ -146,7 +147,7 @@ export const usePromptHook = () => {
                 console.warn("Block missing blockValue:", block);
             }
             if (!block.blockId) {
-                block.blockId = 10000+index;
+                block.blockId = 10000 + index;
                 console.warn(`Generated blockId for block:`, block);
             }
         });
@@ -213,7 +214,9 @@ export const usePromptHook = () => {
 
         // 7. 블럭들의 detail들을 추가 할당한다.
         setBlockDetails((prevBlockDetails) => {
-            const newBlocks = Object.fromEntries(blocks.map((block) => [block.blockId, block]));
+            const newBlocks = Object.fromEntries(
+                blocks.map((block) => [block.blockId, block]),
+            );
             return { ...prevBlockDetails, ...newBlocks };
         });
     };
@@ -224,9 +227,14 @@ export const usePromptHook = () => {
             promptCategory: promptCategory,
         };
 
-        const response = await sendRequest(aiChatInstance, "get", `/recommend`, {
-            params,
-        });
+        const response = await sendRequest(
+            aiChatInstance,
+            "get",
+            `/recommend`,
+            {
+                params,
+            },
+        );
         await updateAiPromptStructureFromApiData(response.data);
         setFetchAiBlocksState(true);
     };
@@ -291,18 +299,13 @@ export const usePromptHook = () => {
     };
 
     const userHistory = async (userHistory, promptMethod, promptCategory) => {
-        const response = await sendRequest(
-            promptInstance,
-            "post",
-            `/history`,
-            {
-                promptHistory: userHistory,
-                promptMethod: promptMethod,
-                promptCategory: promptCategory
-            }
-        );
+        const response = await sendRequest(promptInstance, "post", `/history`, {
+            promptHistory: userHistory,
+            promptMethod: promptMethod,
+            promptCategory: promptCategory,
+        });
         return response;
-    }
+    };
 
     return {
         fetchBlocks,

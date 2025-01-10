@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { H1 } from "../../../styles/font-styles";
 import styles from "./ChattingMain.module.css";
 import PromptCreateButton from "./Prompt/PromptCreateButton";
@@ -14,7 +13,6 @@ import { t } from "i18next";
 import CreatePromptModal from "../../SideBar/components/Prompt/Modal/CreatePromptModal";
 
 function ChattingMain() {
-    const navigate = useNavigate();
     const setPromptMethod = useSetRecoilState(promptMethodState);
     const { getChattingRoomList } = useChattingRoomHooks();
     const userName = localStorage.getItem("userName");
