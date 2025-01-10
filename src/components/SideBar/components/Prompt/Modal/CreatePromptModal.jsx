@@ -7,30 +7,33 @@ import characterIcon from "../../../../../assets/images/characterIcon.svg";
 import taskIcon from "../../../../../assets/images/taskIcon.svg";
 import freeIcon from "../../../../../assets/images/freeIcon.svg";
 import { useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import {useRecoilState} from "recoil";
 import { promptMethodState } from "../../../../../recoil/prompt/promptRecoilState";
-import { setLocalPromptMethod } from "../../../../../util/localStorage";
-import { H5 } from "../../../../../styles/font-styles";
+import {setLocalPromptCategory, setLocalPromptMethod} from "../../../../../util/localStorage";
+import {B5, H5} from "../../../../../styles/font-styles";
 import { t } from "i18next";
 
 function CreatePromptModal({ isOpen, onClose }) {
     const navigate = useNavigate();
-    const setPromptMethod = useSetRecoilState(promptMethodState);
-    const [selectedMethod, setSelectedMethod] = useState(null);
+    const [promptMethod, setPromptMethod] = useRecoilState(promptMethodState);
+
+    const allCategories = ["IT", "게임", "글쓰기", "건강", "교육", "예술", "기타"];
+    const [promptCategory, setPromptCategory] = useState("IT");
+
 
     if (!isOpen) return null;
 
     const handleCreateClick = () => {
-        if (selectedMethod) {
-            setPromptMethod(selectedMethod);
-            setLocalPromptMethod(selectedMethod);
+        if (promptMethod) {
+            setLocalPromptCategory(promptCategory);
+            setLocalPromptMethod(promptMethod);
             navigate(`/promptMaking/`);
             onClose();
         }
     };
 
     const handleMethodClick = (method) => {
-        setSelectedMethod(method);
+        setPromptMethod(method);
     };
 
     return (
@@ -46,21 +49,49 @@ function CreatePromptModal({ isOpen, onClose }) {
                     <PromptMethodButton
                         type="Character"
                         icon={characterIcon}
-                        isSelected={selectedMethod === "Character"}
+                        isSelected={promptMethod === "Character"}
                         onClick={() => handleMethodClick("Character")}
                     />
                     <PromptMethodButton
                         type="Task/Research"
                         icon={taskIcon}
-                        isSelected={selectedMethod === "Task/Research"}
+                        isSelected={promptMethod === "Task/Research"}
                         onClick={() => handleMethodClick("Task/Research")}
                     />
                     <PromptMethodButton
                         type="Free"
                         icon={freeIcon}
-                        isSelected={selectedMethod === "Free"}
+                        isSelected={promptMethod === "Free"}
                         onClick={() => handleMethodClick("Free")}
                     />
+                </div>
+            </div>
+            <div>
+                카테고리
+                <div className={styles.select}>
+                    <ul className={styles.options}>
+                        {allCategories.map((category) => (
+                            <li
+                                key={category}
+                                onClick={(e) => setPromptCategory(category)}
+                                className={`${styles.option} ${
+                                    category === promptCategory
+                                        ? styles.active
+                                        : styles.none
+                                }`}
+                            >
+                                <B5
+                                    color={
+                                        category === promptCategory
+                                            ? "white"
+                                            : "gray5"
+                                    }
+                                >
+                                    {category}
+                                </B5>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             </div>
             <ModalButton
