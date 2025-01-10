@@ -1,10 +1,11 @@
-import { useRecoilState, useRecoilValue } from "recoil";
+import {useRecoilState, useRecoilValue} from "recoil";
 import { enqueueSnackbar } from "notistack";
 import {
     activeBlocksState,
     combinationsState,
     blockDetailsState,
-    activeCategoryState,
+    activeCategoryState, activeAiBlocksState,
+    userHistoryState
 } from "../../recoil/prompt/promptRecoilState";
 import { useEffect } from "react";
 import { t } from "i18next";
@@ -13,17 +14,35 @@ import { usePromptHook } from "../../api/prompt/prompt";
 export const usePromptMaking = () => {
     const [combinations, setCombinations] = useRecoilState(combinationsState);
     const [activeBlocks, setActiveBlocks] = useRecoilState(activeBlocksState);
+    const [activeAiBlocks, setActiveAiBlocks] = useRecoilState(activeAiBlocksState);
+    const [userHistory, setUserHistoryState] = useRecoilState(userHistoryState);
     const blockDetails = useRecoilValue(blockDetailsState);
     const activeCategory = useRecoilValue(activeCategoryState);
     const { deleteBlock } = usePromptHook();
+    // useEffect(() => {
+    //     const newActiveBlocks = { ...activeBlocks };
+    //     for (const category in newActiveBlocks) {
+    //         newActiveBlocks[category] = newActiveBlocks[category]?.filter(
+    //             (blockId) => combinations[category] !== blockId,
+    //         );
+    //     }
+    //     setActiveBlocks(newActiveBlocks);
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [combinations]);
+
     useEffect(() => {
         const newActiveBlocks = { ...activeBlocks };
+        const newActiveAiBlocks = { ...activeAiBlocks };
         for (const category in newActiveBlocks) {
             newActiveBlocks[category] = newActiveBlocks[category]?.filter(
                 (blockId) => combinations[category] !== blockId,
             );
+            newActiveAiBlocks[category] = newActiveAiBlocks[category]?.filter(
+                (blockId) => combinations[category] !== blockId,
+            );
         }
         setActiveBlocks(newActiveBlocks);
+        setActiveAiBlocks(newActiveAiBlocks);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [combinations]);
 
@@ -42,30 +61,66 @@ export const usePromptMaking = () => {
             return;
         }
 
+        // if (destination.droppableId === "deleteArea") {
+        //     console.log(draggableId);
+        //     handleDeleteBlock(
+        //         source.droppableId,
+        //         numericBlockId,
+        //         isBlockDefault,
+        //     );
+        // } else if (
+        //     source.droppableId === "sidebar" &&
+        //     destination.droppableId !== "sidebar"
+        // ) {
+        //     handleSidebarToCombinationArea(
+        //         destination.droppableId,
+        //         numericBlockId,
+        //         blockCategory,
+        //     );
+        // } else if (
+        //     source.droppableId !== "sidebar" &&
+        //     destination.droppableId === "sidebar"
+        // ) {
+        //     handleCombinationAreaToSidebar(source.droppableId, numericBlockId);
+        // } else if (
+        //     source.droppableId !== "sidebar" &&
+        //     destination.droppableId !== "sidebar"
+        // ) {
+        //     handleWithinCombinationArea(
+        //         source.droppableId,
+        //         destination.droppableId,
+        //         numericBlockId,
+        //     );
+        // }
+
         if (destination.droppableId === "deleteArea") {
-            console.log(draggableId);
             handleDeleteBlock(
                 source.droppableId,
                 numericBlockId,
                 isBlockDefault,
             );
         } else if (
-            source.droppableId === "sidebar" &&
-            destination.droppableId !== "sidebar"
+            (source.droppableId === "sidebar" || source.droppableId === "sidebar_ai") &&
+            destination.droppableId !== "sidebar" &&
+            destination.droppableId !== "sidebar_ai"
         ) {
             handleSidebarToCombinationArea(
                 destination.droppableId,
                 numericBlockId,
                 blockCategory,
+                source.droppableId,
             );
         } else if (
             source.droppableId !== "sidebar" &&
-            destination.droppableId === "sidebar"
+            source.droppableId !== "sidebar_ai" &&
+            (destination.droppableId === "sidebar" || destination.droppableId === "sidebar_ai")
         ) {
-            handleCombinationAreaToSidebar(source.droppableId, numericBlockId);
+            handleCombinationAreaToSidebar(source.droppableId, numericBlockId, destination.droppableId);
         } else if (
             source.droppableId !== "sidebar" &&
-            destination.droppableId !== "sidebar"
+            source.droppableId !== "sidebar_ai" &&
+            destination.droppableId !== "sidebar" &&
+            destination.droppableId !== "sidebar_ai"
         ) {
             handleWithinCombinationArea(
                 source.droppableId,
@@ -75,10 +130,39 @@ export const usePromptMaking = () => {
         }
     };
 
+    // const handleSidebarToCombinationArea = (
+    //     category,
+    //     blockId,
+    //     blockCategory,
+    // ) => {
+    //     if (category !== blockCategory) {
+    //         enqueueSnackbar(
+    //             `${t(`promptMaking.userPromptError`)} ${blockCategory} ${t(`promptMaking.userPromptError2`)}`,
+    //         );
+    //         return;
+    //     }
+    //
+    //     setCombinations((prev) => ({
+    //         ...prev,
+    //         [category]: blockId,
+    //     }));
+    //
+    //     setActiveBlocks((prev) => ({
+    //         ...prev,
+    //         [category]: prev[category].filter((id) => id !== blockId),
+    //     }));
+    //
+    //     handleCombinationChange({
+    //         ...combinations,
+    //         [category]: blockId,
+    //     });
+    // };
+
     const handleSidebarToCombinationArea = (
         category,
         blockId,
         blockCategory,
+        sourceDroppableId,
     ) => {
         if (category !== blockCategory) {
             enqueueSnackbar(
@@ -92,10 +176,26 @@ export const usePromptMaking = () => {
             [category]: blockId,
         }));
 
-        setActiveBlocks((prev) => ({
-            ...prev,
-            [category]: prev[category].filter((id) => id !== blockId),
-        }));
+        setUserHistoryState((prev) => {
+            const prevEntries = typeof prev === 'string' ? prev.split('\n') : [];
+            const nextNumber = prevEntries.length + 1;
+            const description = blockDetails[blockId]?.blockDescription || 'Description not found';
+            const newEntry = `${nextNumber}. ${category}에서 ${description}을 선택했습니다`;
+            return prevEntries.length > 0 ? `${prevEntries.join('\n')}\n${newEntry}` : newEntry;
+        });
+
+
+        if (sourceDroppableId === "sidebar") {
+            setActiveBlocks((prev) => ({
+                ...prev,
+                [category]: prev[category].filter((id) => id !== blockId),
+            }));
+        } else if (sourceDroppableId === "sidebar_ai") {
+            setActiveAiBlocks((prev) => ({
+                ...prev,
+                [category]: prev[category].filter((id) => id !== blockId),
+            }));
+        }
 
         handleCombinationChange({
             ...combinations,
@@ -103,16 +203,35 @@ export const usePromptMaking = () => {
         });
     };
 
-    const handleCombinationAreaToSidebar = (category, blockId) => {
+    // const handleCombinationAreaToSidebar = (category, blockId) => {
+    //     setCombinations((prev) => ({
+    //         ...prev,
+    //         [category]: null,
+    //     }));
+    //
+    //     setActiveBlocks((prev) => ({
+    //         ...prev,
+    //         [category]: [...prev[category], blockId],
+    //     }));
+    // };
+
+    const handleCombinationAreaToSidebar = (category, blockId, destinationDroppableId) => {
         setCombinations((prev) => ({
             ...prev,
             [category]: null,
         }));
 
-        setActiveBlocks((prev) => ({
-            ...prev,
-            [category]: [...prev[category], blockId],
-        }));
+        if (destinationDroppableId === "sidebar") {
+            setActiveBlocks((prev) => ({
+                ...prev,
+                [category]: [...prev[category], blockId],
+            }));
+        } else if (destinationDroppableId === "sidebar_ai") {
+            setActiveAiBlocks((prev) => ({
+                ...prev,
+                [category]: [...prev[category], blockId],
+            }));
+        }
     };
 
     const handleWithinCombinationArea = (
@@ -134,11 +253,12 @@ export const usePromptMaking = () => {
     const handleCombinationChange = (newCombinations) => {
         console.log("새로운 조합:", newCombinations);
         console.log("조합 시도");
+        console.log(userHistory);
         // 여기에 조합 변경에 따른 추가 로직을 구현할 수 있습니다.
     };
 
     const handleDeleteBlock = (sourceCategory, blockId, isDefault) => {
-        if (sourceCategory === "sidebar") {
+        if (sourceCategory === "sidebar" || sourceCategory === "sidebar_ai") {
             if (isDefault === "true") {
                 // isDefault는 문자열로 전달될 수 있으므로 문자열 비교
                 console.log("Cannot delete default block");

@@ -33,3 +33,12 @@ export const getIsFirstVisited = () => {
 export const setIsFirstVisited = (isFirstVisit) => {
     localStorage.setItem("hasVisited", isFirstVisit.toString());
 };
+
+export const setLocalPromptCategory = (type) => {
+    localStorage.setItem("LocalPromptCategory", type);
+};
+
+export const getLocalPromptCategory = () => {
+    const LocalPromptCategory = localStorage.getItem("LocalPromptCategory");
+    return LocalPromptCategory;
+};

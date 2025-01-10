@@ -6,7 +6,7 @@ import ModalButton from "../../common/ModalButton";
 import {
     promptMethodState,
     promptListState,
-    blockDetailsState,
+    blockDetailsState, userHistoryState,
 } from "../../../recoil/prompt/promptRecoilState";
 import { useRecoilValue } from "recoil";
 import RefinedPromptText from "../FinalPromptArea/RefinedPromptText";
@@ -14,6 +14,7 @@ import { usePromptHook } from "../../../api/prompt/prompt";
 import { useChattingRoomHooks } from "../../../api/chatting/chatting";
 import ModalContainer from "../../common/ModalContainer";
 import { t } from "i18next";
+import {getLocalPromptCategory} from "../../../util/localStorage";
 
 const allCategories = ["IT", "게임", "글쓰기", "건강", "교육", "예술", "기타"];
 
@@ -30,10 +31,12 @@ const SavePromptModal = ({
     const prompt = promptList.find((p) => p.promptId === promptId);
     const [promptTitle, setPromptTitle] = useState("");
     const [promptDescription, setPromptDescription] = useState("");
-    const [promptCategory, setPromptCategory] = useState("IT");
+    const localPromptCategory = getLocalPromptCategory();
+    const [promptCategory, setPromptCategory] = useState(localPromptCategory);
     const promptMethod = useRecoilValue(promptMethodState);
+    const userHistoryValue = useRecoilValue(userHistoryState);
 
-    const { savePrompt } = usePromptHook();
+    const { savePrompt, userHistory } = usePromptHook();
     const { fetchPromptList, patchPromptBlock, patchPromptInfo } =
         useChattingRoomHooks();
 
@@ -46,7 +49,7 @@ const SavePromptModal = ({
             // Reset state if no prompt is found
             setPromptTitle("");
             setPromptDescription("");
-            setPromptCategory("IT");
+            setPromptCategory(localPromptCategory);
         }
     }, [prompt]);
 
@@ -65,7 +68,7 @@ const SavePromptModal = ({
             console.log("listPromptAtom:", listPromptAtom);
             console.log("promptPreview", promptPreview);
             patchPromptBlock(
-                promptId, 
+                promptId,
                 listPromptAtom,
                 promptPreview,
             );
@@ -89,6 +92,18 @@ const SavePromptModal = ({
                 promptMethod,
                 listPromptAtom,
             );
+
+            userHistory(
+                userHistoryValue,
+                promptMethod,
+                promptCategory
+            );
+
+            console.log({
+                userHistoryValue,
+                promptMethod,
+                promptCategory
+            });
 
             console.log({
                 promptTitle,
@@ -155,7 +170,7 @@ const SavePromptModal = ({
                         {allCategories.map((category) => (
                             <li
                                 key={category}
-                                onClick={(e) => setPromptCategory(category)} 
+                                onClick={(e) => setPromptCategory(category)}
                                 className={`${styles.option} ${
                                     category === promptCategory
                                         ? styles.active

@@ -15,3 +15,34 @@
     align-items: center;
     gap: 20px;
 }
+
+.select {
+    width: 100%;
+}
+
+.options {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    gap: 10px;
+}
+
+.option {
+    list-style-type: none;
+    padding: 6px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.options .active {
+    background-color: var(--block-main-color);
+    border: 1px solid var(--block-main-color);
+}
+
+.options .none {
+    background-color: var(--white);
+    border: 1px solid var(--color-gray5);
+}

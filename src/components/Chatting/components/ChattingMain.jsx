@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { H1 } from "../../../styles/font-styles";
 import styles from "./ChattingMain.module.css";
@@ -11,16 +11,22 @@ import { useSetRecoilState } from "recoil";
 import { useChattingRoomHooks } from "../../../api/chatting/chatting";
 import { setLocalPromptMethod } from "../../../util/localStorage";
 import { t } from "i18next";
+import CreatePromptModal from "../../SideBar/components/Prompt/Modal/CreatePromptModal";
 
 function ChattingMain() {
     const navigate = useNavigate();
     const setPromptMethod = useSetRecoilState(promptMethodState);
     const { getChattingRoomList } = useChattingRoomHooks();
     const userName = localStorage.getItem("userName");
+    const [isPromptModalOpen, setIsPromptModalOpen] = useState(false);
     const handlePromptCreateClick = (type) => {
+        setIsPromptModalOpen(true);
         setPromptMethod(type);
         setLocalPromptMethod(type);
-        navigate(`/promptMaking/`);
+    };
+
+    const closePromptModal = () => {
+        setIsPromptModalOpen(false);
     };
 
     useEffect(() => {
@@ -54,6 +60,10 @@ function ChattingMain() {
                     onClick={() => handlePromptCreateClick("Free")}
                 />
             </div>
+            <CreatePromptModal
+                isOpen={isPromptModalOpen}
+                onClose={closePromptModal}
+            />
         </div>
     );
 }
