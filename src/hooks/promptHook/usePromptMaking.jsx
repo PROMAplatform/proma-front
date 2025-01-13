@@ -7,6 +7,7 @@ import {
     activeCategoryState,
     activeAiBlocksState,
     userHistoryState,
+    aiListPromptState,
 } from "../../recoil/prompt/promptRecoilState";
 import { useEffect } from "react";
 import { t } from "i18next";
@@ -17,6 +18,7 @@ export const usePromptMaking = () => {
     const [activeBlocks, setActiveBlocks] = useRecoilState(activeBlocksState);
     const [activeAiBlocks, setActiveAiBlocks] =
         useRecoilState(activeAiBlocksState);
+    const [aiListPrompt, setAiListPrompt] = useRecoilState(aiListPromptState);
     const [userHistory, setUserHistoryState] = useRecoilState(userHistoryState);
     const blockDetails = useRecoilValue(blockDetailsState);
     const activeCategory = useRecoilValue(activeCategoryState);
@@ -207,6 +209,13 @@ export const usePromptMaking = () => {
                 ...prev,
                 [category]: prev[category].filter((id) => id !== blockId),
             }));
+
+            setAiListPrompt((prev) => ({
+                ...prev,
+                [category]: blockDetails[blockId],
+            }));
+
+            console.log("aiList", aiListPrompt);
         }
 
         handleCombinationChange({

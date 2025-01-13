@@ -8,6 +8,7 @@ import {
     promptListState,
     blockDetailsState,
     userHistoryState,
+    aiListPromptState,
 } from "../../../recoil/prompt/promptRecoilState";
 import { useRecoilValue } from "recoil";
 import RefinedPromptText from "../FinalPromptArea/RefinedPromptText";
@@ -36,6 +37,7 @@ const SavePromptModal = ({
     const [promptCategory, setPromptCategory] = useState(localPromptCategory);
     const promptMethod = useRecoilValue(promptMethodState);
     const userHistoryValue = useRecoilValue(userHistoryState);
+    const aiListPromptValue = useRecoilValue(aiListPromptState);
 
     const { savePrompt, userHistory } = usePromptHook();
     const { fetchPromptList, patchPromptBlock, patchPromptInfo } =
@@ -78,9 +80,23 @@ const SavePromptModal = ({
             );
         } else {
             const promptPreview = Object.values(refinedPromptParts).join(" ");
+            const aiListPromptBlockIds = Object.values(aiListPromptValue).map(
+                (item) => item.blockId,
+            );
+
             const listPromptAtom = Object.values(combinations)
                 .filter(Boolean)
+                .filter(
+                    (value) => !aiListPromptBlockIds.includes(Number(value)),
+                )
                 .map((value, index) => ({ blockId: value }));
+
+            const aiListPromptAtom = Object.values(aiListPromptValue).map(
+                (item) => {
+                    const { blockId, ...rest } = item;
+                    return rest;
+                },
+            );
 
             savePrompt(
                 promptTitle,
@@ -89,6 +105,7 @@ const SavePromptModal = ({
                 promptCategory,
                 promptMethod,
                 listPromptAtom,
+                aiListPromptAtom,
             );
 
             userHistory(userHistoryValue, promptMethod, promptCategory);
@@ -106,6 +123,7 @@ const SavePromptModal = ({
                 promptCategory,
                 promptMethod,
                 listPromptAtom,
+                aiListPromptAtom,
             });
             // 여기서 일반적으로 이 데이터를 백엔드로 보내거나 상태 관리 시스템에 저장합니다
         }
