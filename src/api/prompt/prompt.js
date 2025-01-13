@@ -266,6 +266,7 @@ export const usePromptHook = () => {
         promptCategory,
         promptMethod,
         listPromptAtom,
+        aiListPromptAtom,
     ) => {
         await sendRequest(promptInstance, "post", ``, {
             promptTitle,
@@ -274,6 +275,7 @@ export const usePromptHook = () => {
             promptCategory,
             promptMethod,
             listPromptAtom,
+            aiListPromptAtom,
         });
         //TODO- ㅡ프롬프트 생성 후에, 프롬프트 리스트를 다시 불러오는 것
         // await fetchPromptList();

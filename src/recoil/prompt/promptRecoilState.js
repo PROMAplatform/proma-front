@@ -240,6 +240,11 @@ export const userHistoryState = atom({
     default: "",
 });
 
+export const aiListPromptState = atom({
+    key: "aiListPromptState",
+    default: {},
+});
+
 // // 각종 상태 초기화 함수
 // export const useResetCategoriesOnTypeChange = () => {
 //   return useRecoilCallback(({ snapshot, set }) => async () => {
