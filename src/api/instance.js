@@ -37,6 +37,10 @@ applyInterceptors(communityIntstance);
 const publicIntstance = axios.create(defaultInstance.defaults);
 publicIntstance.defaults.baseURL += "/public";
 
+const secondaryInstance = axios.create(defaultAIInstance.defaults);
+secondaryInstance.defaults.baseURL += "/secondary";
+applyInterceptors(secondaryInstance);
+
 // const authInstance = axios.create(defaultInstance.defaults);
 // authInstance.defaults.baseURL += "/auth";
 
@@ -56,4 +60,5 @@ export {
     communityIntstance,
     openapiInstance,
     publicIntstance,
+    secondaryInstance,
 };

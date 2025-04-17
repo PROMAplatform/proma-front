@@ -6,6 +6,7 @@ import PromptValueBlock from "../../../common/Prompt/PromptValueBlock";
 import { t } from "i18next";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
+    combinationsState,
     activeAiBlocksState,
     activeCategoryState,
     availableCategoriesState,
@@ -27,7 +28,7 @@ function AiBlockSection() {
     const categoryBlockShapes = useRecoilValue(categoryBlockShapesState);
     const localPromptMethod = getLocalPromptMethod();
     const localPromptCategory = getLocalPromptCategory();
-    const { fetchAiBlocks } = usePromptHook();
+    const { fetchAiBlocks, refetchRecommendBlocks } = usePromptHook();
     const [isLoading, setFetchAiBlocksState] =
         useRecoilState(fetchAiBlocksState);
     const [activeCategory, setActiveCategory] =
@@ -35,6 +36,17 @@ function AiBlockSection() {
     const activeBlocks = useRecoilValue(activeAiBlocksState);
     const categories = useRecoilValue(availableCategoriesState);
     const blockDetails = useRecoilValue(blockDetailsState);
+    const combinations = useRecoilValue(combinationsState);
+
+    const keyMap = {
+        화자: "speaker",
+        청자: "listener",
+        지시: "instruction",
+        형식: "form",
+        제외: "excluded",
+        필수: "required",
+    };
+
     const defaultOptions = {
         loop: true,
         autoplay: true,
@@ -53,6 +65,28 @@ function AiBlockSection() {
         fetchAiBlocks(localPromptMethod, localPromptCategory);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        const hasCombinations = Object.keys(combinations).length > 0;
+
+        if (!hasCombinations) return;
+
+        const payload = {
+            type: localPromptMethod,
+            category: localPromptCategory,
+            ...Object.entries(combinations).reduce((acc, [korKey, blockId]) => {
+                const engKey = keyMap[korKey];
+                if (engKey && blockDetails[blockId]) {
+                    acc[engKey] = blockDetails[blockId].blockValue || "";
+                }
+                return acc;
+            }, {}),
+        };
+
+        setFetchAiBlocksState(false);
+        refetchRecommendBlocks(payload);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [combinations]);
 
     return (
         <div>

@@ -38,10 +38,18 @@ const SavePromptModal = ({
     const promptMethod = useRecoilValue(promptMethodState);
     const userHistoryValue = useRecoilValue(userHistoryState);
     const aiListPromptValue = useRecoilValue(aiListPromptState);
-
-    const { savePrompt, userHistory } = usePromptHook();
+    const { savePrompt, userHistory, saveAiBlocksPrompt } = usePromptHook();
     const { fetchPromptList, patchPromptBlock, patchPromptInfo } =
         useChattingRoomHooks();
+
+    const keyMap = {
+        화자: "speaker",
+        청자: "listener",
+        지시: "instruction",
+        형식: "form",
+        제외: "excluded",
+        필수: "required",
+    };
 
     useEffect(() => {
         if (prompt) {
@@ -126,6 +134,24 @@ const SavePromptModal = ({
                 aiListPromptAtom,
             });
             // 여기서 일반적으로 이 데이터를 백엔드로 보내거나 상태 관리 시스템에 저장합니다
+
+            const payload = {
+                type: promptMethod,
+                category: promptCategory,
+                ...Object.entries(combinations).reduce(
+                    (acc, [korKey, blockId]) => {
+                        const engKey = keyMap[korKey];
+                        if (engKey && blockDetails[blockId]) {
+                            acc[engKey] =
+                                blockDetails[blockId].blockValue || "";
+                        }
+                        return acc;
+                    },
+                    {},
+                ),
+            };
+
+            saveAiBlocksPrompt(payload);
         }
         navigate("/main");
         fetchPromptList();
