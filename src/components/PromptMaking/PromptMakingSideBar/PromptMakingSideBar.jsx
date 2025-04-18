@@ -8,13 +8,13 @@ import BlockSection from "./components/BlockSection";
 import { useSetRecoilState } from "recoil";
 import { userHistoryState } from "../../../recoil/prompt/promptRecoilState";
 
-
 const PromptMakingSidebar = () => {
     const setUserHistory = useSetRecoilState(userHistoryState);
 
     //userhistory 초기화
     useEffect(() => {
         setUserHistory("");
+        localStorage.setItem("newblockId", 100000);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

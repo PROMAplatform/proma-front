@@ -34,6 +34,7 @@ export const usePromptHook = () => {
     const setEvaluation = useSetRecoilState(promptEvaluationState);
     const setEvaluationError = useSetRecoilState(promptEvaluationErrorState);
     const setFetchAiBlocksState = useSetRecoilState(fetchAiBlocksState);
+
     // 새로운 함수: API 데이터로부터 프롬프트 구조 갱신
     const updatePromptStructureFromApiData = (apiData) => {
         if (
@@ -240,7 +241,7 @@ export const usePromptHook = () => {
             },
         );
         await updateAiPromptStructureFromApiData(response.data);
-        setFetchAiBlocksState(true);
+        setFetchAiBlocksState(false);
     };
 
     const refetchRecommendBlocks = async (params) => {
@@ -252,11 +253,22 @@ export const usePromptHook = () => {
         );
         const recommendedBlocks = response.data.responseDto.selectBlock || [];
 
+        //local storage에 저장된 blockId 가져오기
+        const savedBlockId = parseInt(localStorage.getItem("newblockId"));
+
         // blockId 부여 + 블록 객체 변환
         const blocksWithIds = recommendedBlocks.map((block, index) => ({
             ...block,
-            blockId: 100000 + index, // 고유한 id 부여 (숫자 겹치지 않게)
+            blockId: savedBlockId + index, // 고유한 id 부여 (숫자 겹치지 않게)
         }));
+
+        //local storage에 저장된 blockId 업데이트
+        localStorage.setItem(
+            "newblockId",
+            blocksWithIds[blocksWithIds.length - 1].blockId + 1,
+        );
+
+        console.log("blocksWithIds: ", blocksWithIds);
 
         // 카테고리 추출
         const categories = [
@@ -283,7 +295,7 @@ export const usePromptHook = () => {
         setActiveAiBlocks(grouped);
 
         // 로딩 완료 상태
-        setFetchAiBlocksState(true);
+        setFetchAiBlocksState(false);
     };
 
     const saveAiBlocksPrompt = async (params) => {
