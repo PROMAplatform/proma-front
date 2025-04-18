@@ -61,7 +61,7 @@ function AiBlockSection() {
     };
 
     useEffect(() => {
-        setFetchAiBlocksState(false);
+        setFetchAiBlocksState(true);
         fetchAiBlocks(localPromptMethod, localPromptCategory);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -83,7 +83,7 @@ function AiBlockSection() {
             }, {}),
         };
 
-        setFetchAiBlocksState(false);
+        setFetchAiBlocksState(true);
         refetchRecommendBlocks(payload);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [combinations]);
@@ -108,7 +108,7 @@ function AiBlockSection() {
                         </div>
                     ))}
                 </div>
-                {isLoading ? (
+                {!isLoading ? (
                     <div
                         className={`${styles.blocksContainer} ${styles.tourTarget}`}
                         style={{ "--active-color": getActiveColor() }}
